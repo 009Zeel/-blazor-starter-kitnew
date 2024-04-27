@@ -171,6 +171,7 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
 
         private SigningCredentials GetSigningCredentials()
         {
+
             var secret = Encoding.UTF8.GetBytes(_appConfig.Secret);
             return new SigningCredentials(new SymmetricSecurityKey(secret), SecurityAlgorithms.HmacSha256);
         }
