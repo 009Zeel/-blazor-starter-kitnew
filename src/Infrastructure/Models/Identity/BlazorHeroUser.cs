@@ -25,6 +25,7 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Models.Identity
         public DateTime? LastModifiedOn { get; set; }
 
         public bool IsDeleted { get; set; }
+        public DateTime? LastPasswordChangedDate { get; set; }
 
         public DateTime? DeletedOn { get; set; }
         public bool IsActive { get; set; }

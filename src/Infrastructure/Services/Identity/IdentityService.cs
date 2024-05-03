@@ -4,10 +4,12 @@ using BlazorHero.CleanArchitecture.Application.Requests.Identity;
 using BlazorHero.CleanArchitecture.Application.Responses.Identity;
 using BlazorHero.CleanArchitecture.Infrastructure.Models.Identity;
 using BlazorHero.CleanArchitecture.Shared.Wrapper;
+
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Localization;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
+
 using System;
 using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
@@ -26,17 +28,19 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
         private readonly UserManager<BlazorHeroUser> _userManager;
         private readonly RoleManager<BlazorHeroRole> _roleManager;
         private readonly AppConfiguration _appConfig;
+        private readonly PasswordPolicy _passwordPolicy;
         private readonly SignInManager<BlazorHeroUser> _signInManager;
         private readonly IStringLocalizer<IdentityService> _localizer;
 
         public IdentityService(
             UserManager<BlazorHeroUser> userManager, RoleManager<BlazorHeroRole> roleManager,
-            IOptions<AppConfiguration> appConfig, SignInManager<BlazorHeroUser> signInManager,
+            IOptions<AppConfiguration> appConfig, IOptions<PasswordPolicy> passwordPolicy, SignInManager<BlazorHeroUser> signInManager,
             IStringLocalizer<IdentityService> localizer)
         {
             _userManager = userManager;
             _roleManager = roleManager;
             _appConfig = appConfig.Value;
+            _passwordPolicy = passwordPolicy.Value;
             _signInManager = signInManager;
             _localizer = localizer;
         }
@@ -65,9 +69,14 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
             user.RefreshToken = GenerateRefreshToken();
             user.RefreshTokenExpiryTime = DateTime.Now.AddDays(7);
             await _userManager.UpdateAsync(user);
-
+            var ComparisionDate = DateTime.Now.AddDays(-_passwordPolicy.PasswordLifeTimeinDays);
+            bool passwordExpired = _passwordPolicy.PasswordCanExpire
+&& (user.LastPasswordChangedDate.HasValue
+                    ? user.LastPasswordChangedDate.Value<= ComparisionDate
+                    : user.CreatedOn <= ComparisionDate);
             var token = await GenerateJwtAsync(user);
-            var response = new TokenResponse { Token = token, RefreshToken = user.RefreshToken, UserImageURL = user.ProfilePictureDataUrl };
+            var response = new TokenResponse { Token = token, RefreshToken = user.RefreshToken, UserImageURL = user.ProfilePictureDataUrl, PasswordExpired = passwordExpired };
+
             return await Result<TokenResponse>.SuccessAsync(response);
         }
 

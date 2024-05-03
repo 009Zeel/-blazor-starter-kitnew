@@ -1,5 +1,6 @@
 ﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<NavMenu> _localizer
 @using System.Security.Claims
+@using BlazorHero.CleanArchitecture.Shared.Constants.Storage
 
 <UserCard />
 <MudNavMenu>
@@ -115,5 +116,10 @@
         _canViewChat = (await _authorizationService.AuthorizeAsync(_authenticationStateProviderUser, Permissions.Communication.Chat)).Succeeded;
         _canViewProducts = (await _authorizationService.AuthorizeAsync(_authenticationStateProviderUser, Permissions.Products.View)).Succeeded;
         _canViewBrands = (await _authorizationService.AuthorizeAsync(_authenticationStateProviderUser, Permissions.Brands.View)).Succeeded;
+        var passwordIsExpired = await _localStorage.GetItemAsync<bool>(StorageConstants.Local.PassWordExpired);
+        if (passwordIsExpired)
+        {
+            _navigationManager.NavigateTo("/account/change-password/");
+        }
     }
 }

@@ -169,7 +169,7 @@ namespace BlazorHero.CleanArchitecture.Client.Shared
                         SecondName = string.Empty;
                         Email = string.Empty;
                         FirstLetterOfName = char.MinValue;
-                        //await _authenticationManager.Logout();
+                        await _authenticationManager.Logout();
                     }
                 }
             }
