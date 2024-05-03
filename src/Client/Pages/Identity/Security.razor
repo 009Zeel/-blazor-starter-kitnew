@@ -1,5 +1,5 @@
 ﻿@inject Microsoft.Extensions.Localization.IStringLocalizer<Security> _localizer
-@page "/account/change-password/"
+@page "/change-password/"
 <EditForm Model="@_passwordModel" OnValidSubmit="ChangePasswordAsync">
     <FluentValidationValidator @ref="_fluentValidationValidator" />
     <MudCard Elevation="25">
