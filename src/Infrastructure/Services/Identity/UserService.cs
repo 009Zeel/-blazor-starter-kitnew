@@ -16,6 +16,7 @@ using BlazorHero.CleanArchitecture.Application.Responses.Identity;
 using BlazorHero.CleanArchitecture.Infrastructure.Models.Identity;
 using BlazorHero.CleanArchitecture.Infrastructure.Specifications;
 using BlazorHero.CleanArchitecture.Shared.Constants.Role;
+using BlazorHero.CleanArchitecture.Shared.Models;
 using BlazorHero.CleanArchitecture.Shared.Wrapper;
 using Hangfire;
 using Microsoft.AspNetCore.Identity;
@@ -96,15 +97,7 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
                     await _userManager.AddToRoleAsync(user, RoleConstants.BasicRole);
                     if (!request.AutoConfirmEmail)
                     {
-                        var verificationUri = await SendVerificationEmail(user, origin);
-                        var mailRequest = new MailRequest
-                        {
-                            From = "mail@codewithmukesh.com",
-                            To = user.Email,
-                            Body = string.Format(_localizer["Please confirm your account by <a href='{0}'>clicking here</a>."], verificationUri),
-                            Subject = _localizer["Confirm Registration"]
-                        };
-                        BackgroundJob.Enqueue(() => _mailService.SendAsync(mailRequest));
+                        await SendConfirmationMail(user, origin);
                         return await Result<string>.SuccessAsync(user.Id, string.Format(_localizer["User {0} Registered. Please check your Mailbox to verify!"], user.UserName));
                     }
                     return await Result<string>.SuccessAsync(user.Id, string.Format(_localizer["User {0} Registered."], user.UserName));
@@ -120,7 +113,19 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
             }
         }
 
-        private async Task<string> SendVerificationEmail(BlazorHeroUser user, string origin)
+        private async Task SendConfirmationMail(BlazorHeroUser user, string origin)
+        {
+            var verificationUri = await SendVerificationEmail(user, origin);
+            var mailRequest = new MailRequest
+            {
+                From = "mail@codewithmukesh.com",
+                To = user.Email,
+                Body = string.Format(_localizer["Please confirm your account by <a href='{0}'>clicking here</a>."], verificationUri),
+                Subject = _localizer["Confirm Registration"]
+            };
+            BackgroundJob.Enqueue(() => _mailService.SendAsync(mailRequest));
+        }
+        public async Task<string> SendVerificationEmail(BlazorHeroUser user, string origin)
         {
             var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
             code = WebEncoders.Base64UrlEncode(Encoding.UTF8.GetBytes(code));
@@ -300,6 +305,13 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
                 });
 
             return result;
+        }
+
+        public async Task<IResult> SendConfirmEmailAsync(GetConfirmationLinkRequest request)
+        {
+            var user =await  _userManager.FindByIdAsync(request.UserId);
+          await SendConfirmationMail(user, request.Origin);
+            return Result.Success("Mail Sent");
         }
     }
 }

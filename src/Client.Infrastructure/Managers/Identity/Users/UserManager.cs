@@ -2,6 +2,7 @@
 using BlazorHero.CleanArchitecture.Application.Responses.Identity;
 using BlazorHero.CleanArchitecture.Client.Infrastructure.Extensions;
 using BlazorHero.CleanArchitecture.Shared.Wrapper;
+
 using System.Collections.Generic;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -33,6 +34,11 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.U
         public async Task<IResult> RegisterUserAsync(RegisterRequest request)
         {
             var response = await _httpClient.PostAsJsonAsync(Routes.UserEndpoints.Register, request);
+            return await response.ToResult();
+        }
+        public async Task<IResult> ResendConfirmationMailAsync(string  userId)
+        {
+            var response = await _httpClient.PostAsJsonAsync(Routes.UserEndpoints.ResendMail, userId);
             return await response.ToResult();
         }
 
