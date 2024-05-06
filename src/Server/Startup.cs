@@ -44,6 +44,7 @@ namespace BlazorHero.CleanArchitecture.Server
             services.AddServerLocalization();
             services.AddIdentity();
             services.AddJwtAuthentication(services.GetApplicationSettings(_configuration));
+            services.GetPasswordPolicySettings(_configuration);
             services.AddSignalR();
             services.AddApplicationLayer();
             services.AddApplicationServices();

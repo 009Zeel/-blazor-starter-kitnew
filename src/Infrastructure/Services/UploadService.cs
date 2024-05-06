@@ -84,4 +84,5 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services
             return string.Format(pattern, max);
         }
     }
+   
 }

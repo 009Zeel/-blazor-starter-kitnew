@@ -132,6 +132,18 @@ namespace BlazorHero.CleanArchitecture.Server.Controllers.Identity
         }
 
         /// <summary>
+        /// Reset Password
+        /// </summary>
+        /// <param name="request"></param>
+        /// <returns>Status 200 OK</returns>
+        [HttpPost("resend-mail")]
+        public async Task<IActionResult> ResendConfirmationMal(string userId)
+        {
+            var origin = Request.Headers["origin"];            
+            return Ok(await _userService.SendConfirmEmailAsync(new GetConfirmationLinkRequest(userId, origin)));
+        }
+
+        /// <summary>
         /// Export to Excel
         /// </summary>
         /// <param name="searchString"></param>
