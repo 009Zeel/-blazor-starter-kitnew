@@ -51,8 +51,12 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.A
                 var token = result.Data.Token;
                 var refreshToken = result.Data.RefreshToken;
                 var userImageURL = result.Data.UserImageURL;
+                var passwordExpired = result.Data.PasswordExpired;
+
+                await _localStorage.SetItemAsync(StorageConstants.Local.AuthToken, token);
                 await _localStorage.SetItemAsync(StorageConstants.Local.AuthToken, token);
                 await _localStorage.SetItemAsync(StorageConstants.Local.RefreshToken, refreshToken);
+                await _localStorage.SetItemAsync(StorageConstants.Local.PassWordExpired, passwordExpired);
                 if (!string.IsNullOrEmpty(userImageURL))
                 {
                     await _localStorage.SetItemAsync(StorageConstants.Local.UserImageURL, userImageURL);
@@ -75,6 +79,8 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.A
             await _localStorage.RemoveItemAsync(StorageConstants.Local.AuthToken);
             await _localStorage.RemoveItemAsync(StorageConstants.Local.RefreshToken);
             await _localStorage.RemoveItemAsync(StorageConstants.Local.UserImageURL);
+            await _localStorage.RemoveItemAsync(StorageConstants.Local.PassWordExpired);
+
             ((BlazorHeroStateProvider)_authenticationStateProvider).MarkUserAsLoggedOut();
             _httpClient.DefaultRequestHeaders.Authorization = null;
             return await Result.SuccessAsync();
