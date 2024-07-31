@@ -9,6 +9,7 @@ using BlazorHero.CleanArchitecture.Shared.Constants.Application;
 using BlazorHero.CleanArchitecture.Shared.Constants.Permission;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.JSInterop;
+using Polly;
 
 namespace BlazorHero.CleanArchitecture.Client.Pages.Identity
 {
@@ -117,6 +118,10 @@ namespace BlazorHero.CleanArchitecture.Client.Pages.Identity
         {
             if (email == "mukesh@blazorhero.com") _snackBar.Add(_localizer["Not Allowed."], Severity.Error);
             else _navigationManager.NavigateTo($"/identity/user-roles/{userId}");
+        }
+        private void SendMail(string userId)
+        {
+            _userManager.ResendConfirmationMailAsync(userId);
         }
     }
 }

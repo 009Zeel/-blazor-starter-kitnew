@@ -2,6 +2,7 @@
 using BlazorHero.CleanArchitecture.Application.Requests.Identity;
 using BlazorHero.CleanArchitecture.Application.Responses.Identity;
 using BlazorHero.CleanArchitecture.Shared.Wrapper;
+
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -24,6 +25,7 @@ namespace BlazorHero.CleanArchitecture.Application.Interfaces.Services.Identity
         Task<IResult> UpdateRolesAsync(UpdateUserRolesRequest request);
 
         Task<IResult<string>> ConfirmEmailAsync(string userId, string code);
+        Task<IResult> SendConfirmEmailAsync(GetConfirmationLinkRequest request);
 
         Task<IResult> ForgotPasswordAsync(ForgotPasswordRequest request, string origin);
 

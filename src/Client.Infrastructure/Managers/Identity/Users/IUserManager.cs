@@ -19,6 +19,7 @@ namespace BlazorHero.CleanArchitecture.Client.Infrastructure.Managers.Identity.U
         Task<IResult<UserRolesResponse>> GetRolesAsync(string userId);
 
         Task<IResult> RegisterUserAsync(RegisterRequest request);
+        Task<IResult> ResendConfirmationMailAsync(string userId);
 
         Task<IResult> ToggleUserStatusAsync(ToggleUserStatusRequest request);
 

@@ -78,6 +78,8 @@ else
                         {
                         <MudMenuItem OnClick="(()=>ManageRoles(context.Id, context.Email))">@_localizer["Manage Roles"]</MudMenuItem>
                         }
+                    <MudMenuItem OnClick="(()=>SendMail(context.Id))">@_localizer["(Re) Send Confimation Mail"]</MudMenuItem>
+
                 </MudMenu>
             </MudTd>
         </RowTemplate>

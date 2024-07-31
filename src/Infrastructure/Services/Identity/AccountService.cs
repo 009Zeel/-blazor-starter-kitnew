@@ -8,6 +8,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Localization;
+using System;
 
 namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
 {
@@ -37,11 +38,13 @@ namespace BlazorHero.CleanArchitecture.Infrastructure.Services.Identity
             {
                 return await Result.FailAsync(_localizer["User Not Found."]);
             }
-
+            user.LastPasswordChangedDate = DateTime.Now;
             var identityResult = await this._userManager.ChangePasswordAsync(
                 user,
                 model.Password,
                 model.NewPassword);
+            user.LastPasswordChangedDate = DateTime.Now;
+            await _userManager.UpdateAsync(user);
             var errors = identityResult.Errors.Select(e => _localizer[e.Description].ToString()).ToList();
             return identityResult.Succeeded ? await Result.SuccessAsync() : await Result.FailAsync(errors);
         }

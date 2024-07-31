@@ -129,6 +129,17 @@ namespace BlazorHero.CleanArchitecture.Server.Extensions
             services.Configure<AppConfiguration>(applicationSettingsConfiguration);
             return applicationSettingsConfiguration.Get<AppConfiguration>();
         }
+        internal static void GetPasswordPolicySettings(
+           this IServiceCollection services,
+           IConfiguration configuration)
+        {
+            var passwordPolicyConfiguration = configuration.GetSection(nameof(PasswordPolicy));
+            services.Configure<PasswordPolicy>(passwordPolicyConfiguration);
+            //var x = passwordPolicyConfiguration.Get<PasswordPolicy>();
+            //services.AddSingleton<PasswordPolicy>(_ => x);
+            //services.Configure<PasswordPolicy>(passwordPolicyConfiguration);
+           
+        }
 
         internal static void RegisterSwagger(this IServiceCollection services)
         {

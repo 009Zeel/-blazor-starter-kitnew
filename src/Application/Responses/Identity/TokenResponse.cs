@@ -8,5 +8,6 @@ namespace BlazorHero.CleanArchitecture.Application.Responses.Identity
         public string RefreshToken { get; set; }
         public string UserImageURL { get; set; }
         public DateTime RefreshTokenExpiryTime { get; set; }
+        public bool PasswordExpired { get; set; }= false;
     }
 }

@@ -97,5 +97,11 @@ namespace BlazorHero.CleanArchitecture.Server.Extensions
             var applicationSettingsConfiguration = configuration.GetSection(nameof(AppConfiguration));
             return applicationSettingsConfiguration.Get<AppConfiguration>();
         }
+
+        private static PasswordPolicy GetPasswordPolicySettings(IConfiguration configuration)
+        {
+            var applicationSettingsConfiguration = configuration.GetSection(nameof(PasswordPolicy));
+            return applicationSettingsConfiguration.Get<PasswordPolicy>();
+        }
     }
 }

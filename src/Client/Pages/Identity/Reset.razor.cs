@@ -19,7 +19,7 @@ namespace BlazorHero.CleanArchitecture.Client.Pages.Identity
             var uri = _navigationManager.ToAbsoluteUri(_navigationManager.Uri);
             if (QueryHelpers.ParseQuery(uri.Query).TryGetValue("Token", out var param))
             {
-                var queryToken = param.First();
+                var queryToken = param[0];
                 _resetPasswordModel.Token = Encoding.UTF8.GetString(WebEncoders.Base64UrlDecode(queryToken));
             }
         }
